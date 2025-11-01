@@ -21,6 +21,7 @@ if(!cached){
 
 const connectDB = async () => {
 if(cached.conn){
+    console.log('cached db connected')
     return cached.conn
 }
 // agar cached bhi null hai aur promise bhi null hai toh fir mongoose ke through connect karenge
@@ -30,6 +31,7 @@ cached.promise =connect(mongodbUrl).then((c)=>c.connection)
 
 try {
    cached.conn= await cached.promise
+   console.log('db connected')
 } catch (error) {
   throw error  
 }
