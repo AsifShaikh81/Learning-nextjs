@@ -3,6 +3,7 @@ import  CredentialsProvider  from "next-auth/providers/credentials"
 import connectDB from "./db"
 import User from "@/model/user.model"
 import bcrypt from "bcryptjs"
+import Google from "next-auth/providers/google"
 
 const authOptions:NextAuthOptions={
     // login kaise karenge 
@@ -48,12 +49,74 @@ CredentialsProvider({
       }
     },
     
+}),
+Google({
+  clientId:process.env.GOOGLE_CLIENT_ID!,
+  clientSecret:process.env.GOOGLE_CLIENT_SECRET!
 })
 ],
-callbacks:{},
-session:{},
-pages:{},
-secret:''
+callbacks:{
+  // for google
+  //* note
+  //if u are sign up or signing in with google no password needed
+
+  //if u are signing up data base mein check karo agar account nahi hai toh create kardo
+  async signIn({account,user}){
+    // if provider is google
+    if(account?.provider=='google'){
+      // connect db
+      await connectDB()
+      // check  user exist by email
+      let existUser = await User.findOne({email:user?.email})
+      // if user not exist create it 
+      if(!existUser){
+        existUser=await User.create({
+          name:user.name,
+          email:user?.email
+        })
+      }
+      //'user' -> does not contain id so we are assigning id from db
+      user.id=existUser._id as string
+
+    }
+    return true
+  },
+
+  //token ke andar user detail dalna jo privders se return karne ke baad mila hai, 
+  async jwt({token,user}){
+    if(user){
+    token.id=user.id
+    token.name=user.name
+    token.email=user.email
+    token.image=user.image
+    }
+    return token
+  },
+
+
+// session ke andar  user details dalega token se, jiss se hum front end mein access kar sakte
+session({session,token}){
+  if(session.user){
+    session.user.id=token.id as string
+    session.user.name=token.name
+    session.user.email=token.email
+    session.user.image=token.image as string 
+
+  }
+  return session
+},
+},
+session:{
+   
+  strategy:'jwt', // jwt se data le rahe hai
+  maxAge: 30*24*60*60*1000// kab token/session expire hoga 30* 1 day *1 hour *1min * 1milisecond , expires after 30 days
+},
+
+pages:{
+  signIn:'/login',
+  error:'/login'
+},
+secret:process.env.NEXT_AUTH_SECRET
 }
 
 export default authOptions
@@ -62,4 +125,5 @@ export default authOptions
 //*providers - google,github etc
 //*callbacks - token etc
 //*session -  front end mein data kaise aa raha hai, token se ara hai ya db se
+//*pages - kis pages pe redirect hona hai according to need
 //*secret: jwt secret

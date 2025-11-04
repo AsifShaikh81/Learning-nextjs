@@ -6,7 +6,7 @@ interface Iuser{
     name:string,
     image:string,
     email:string,
-    password:string,
+    password?:string,
     createdAt?:Date,
     updatedAt?:Date,
 
@@ -15,7 +15,7 @@ interface Iuser{
 const userSchema = new mongoose.Schema<Iuser>({
 name:{type:String,required:true},
 email:{type:String,required:true,unique:true},
-password:{type:String,required:true},
+password:{type:String}, // false bcz of google auth
 image:{type:String}
 
 },{timestamps:true})
