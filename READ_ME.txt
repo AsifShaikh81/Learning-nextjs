@@ -42,3 +42,16 @@
 Migration to Proxy for more details.
 🔹without login user can't access home page
 🔹inside src folder:
+    proxy.tsx
+
+6) edit page & cloudinary
+ 🔹inside app folder:
+     edit->page.tsx:
+       code for editing profile and uploading image 
+
+🔹inside lib folder:
+   cloudinary.tsx:
+     code for uploading img to cloudinary
+
+🔹env:
+    inside env folder all cloudinary keys
