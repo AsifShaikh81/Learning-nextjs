@@ -34,3 +34,5 @@ const uploadOnCloudinaty=async (file:Blob | null):Promise<string | null>=>{
     }
   
 }
+
+export default uploadOnCloudinaty

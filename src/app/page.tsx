@@ -5,11 +5,14 @@ import { signOut } from 'next-auth/react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 import { HiPencil } from "react-icons/hi2";
+import { userDataContext } from "@/context/UserContext";
 
 function page() {
   // const session = useSession();
-  const {data} = useSession()
+  // const {data} = useSession()
   // console.log(session?.data?.user);
+ 
+ const data=useContext(userDataContext)
 
     const router =useRouter()
   const [loading,setLoading]=useState(false)

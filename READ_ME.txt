@@ -55,3 +55,12 @@ Migration to Proxy for more details.
 
 🔹env:
     inside env folder all cloudinary keys
+
+7)user api
+creating api to get currently logged in user
+api->user->route.ts
+
+8)userContext 
+src->context->UserContext.tsx
+
+created usercontext to get the userapi and we will use that context wherever we need
